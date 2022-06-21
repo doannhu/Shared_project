@@ -1,18 +1,14 @@
-const express = require('express')
-const app = express();
-const port = 3000;
+var finalhandler = require('finalhandler');
+var http = require('http');
+var serveStatic = require('serve-static');
 
-app.get('/', (req, res) => {
-  res.send('Hello World!')
+// Serve up public folder
+var serve = serveStatic('public/', { index: ['index.html', 'index.htm'] });
+
+// Create server
+var server = http.createServer(function onRequest (req, res) {
+  serve(req, res, finalhandler(req, res))
 });
 
-app.get('/about',(req, res) => {
-    res.send('About')
-});
-
-app.use(express.static('public'));
-app.use(express.static('files'));
-
-app.get('*', (req, res) => {
-    res.send('404! This is an invalid URL.');
-  });
+// Listen
+server.listen(3000);
